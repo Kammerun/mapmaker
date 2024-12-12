@@ -1,4 +1,5 @@
 require("map")
+require("range")
 
 function love.load()
     love.window.setTitle("Mapmaker")
@@ -41,6 +42,7 @@ function love.draw()
     end
 
     map:Show()
+    mouse_range:Draw()
 end
 
 function love.keypressed(k)
@@ -69,8 +71,10 @@ function love.keypressed(k)
     end
 end
 
-function love.mousepressed(x, y, button)
-    if button == 1 then
-        map:SetTile(x, y)
-    end
+function love.mousereleased(x, y, button, istouch, presses)
+    mouse_range:StopDrag(x, y, button, istouch, presses)
+end
+
+function love.mousepressed(x, y, button, istouch, presses)
+    mouse_range:StartDrag(x, y, button, istouch, presses)
 end

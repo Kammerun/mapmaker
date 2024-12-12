@@ -1,10 +1,10 @@
 local inspect = require("inspect")
 map = {}
 
-local mapWidth = 10
-local mapHeight = 10
-local tileWidth = 64
-local tileHeight = 64
+map.mapWidth = 10
+map.mapHeight = 10
+map.tileWidth = 64
+map.tileHeight = 64
 
 local curTypeTile = nil
 
@@ -37,23 +37,22 @@ local bridge = {
 
 local map_tiles = {}
 function map:Create()
-    local row = {}
-    for j = 1, mapWidth do
-        table.insert(row, border)
-        --print(inspect(row))
-    end
-
-    for i = 1, mapHeight do
+    for i = 1, map.mapHeight do
+        local row = {}
+        for j = 1, map.mapWidth do
+            table.insert(row, border)
+        end
         table.insert(map_tiles, row)
     end
-    --print(inspect(map_tiles))
 end
 
 function map:Show()
     for countRow, tileRow in pairs(map_tiles) do
         for countCol, tile in pairs(tileRow) do
             love.graphics.setColor(tile.color)
-            love.graphics.rectangle("fill", tileWidth * (countCol - 1), tileHeight * (countRow - 1), tileWidth, tileHeight)
+            love.graphics.rectangle("fill", map.tileWidth * countCol, map.tileHeight * countRow, map.tileWidth, map.tileHeight)
+            love.graphics.setColor(1, 1, 1)
+            love.graphics.rectangle("line", map.tileWidth * countCol, map.tileHeight * countRow, map.tileWidth, map.tileHeight)
         end
     end
 end
@@ -64,16 +63,16 @@ function map:SetTile(x, y)
         return
     end
 
-    local tileX = math.floor(x / tileWidth)
-    local tileY = math.floor(y / tileHeight)
+    local tileX = math.floor(x)
+    local tileY = math.floor(y)
 
-    if tileX < 0 or tileX > mapWidth then
-        print("X Wrong", tileX)
+    if tileX < 0 or tileX > map.mapWidth then
+        error("X Wrong", tileX)
         return
     end
 
-    if tileY < 0 or tileY > mapHeight then
-        print("Y Wrong", tileY)
+    if tileY < 0 or tileY > map.mapHeight then
+        error("Y Wrong", tileY)
         return
     end
 
