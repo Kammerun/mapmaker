@@ -1,10 +1,9 @@
-local inspect = require("inspect")
 map = {}
 
-map.mapWidth = 10
-map.mapHeight = 10
-map.tileWidth = 64
-map.tileHeight = 64
+map.mapWidth = 60
+map.mapHeight = 60
+map.tileWidth = 16
+map.tileHeight = 16
 
 local curTypeTile = nil
 

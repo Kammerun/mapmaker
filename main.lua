@@ -1,5 +1,6 @@
 require("map")
 require("range")
+require("inspect")
 
 function love.load()
     love.window.setTitle("Mapmaker")

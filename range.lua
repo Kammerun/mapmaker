@@ -1,28 +1,49 @@
+local inspect = require("inspect")
+
 mouse_range = {}
 mouse_range.startPos = {}
 mouse_range.endPos = {}
 
-local function getTile(x, y)
-    local tileX = math.floor(x / map.tileWidth)
-    local tileY = math.floor(y / map.tileHeight)
+local function getTile(pos)
+    local tileX = math.floor(pos[1] / map.tileWidth)
+    local tileY = math.floor(pos[2] / map.tileHeight)
     return {tileX, tileY}
 end
 
 function mouse_range:StartDrag(x, y, button, istouch, presses)
-    mouse_range.startPos = getTile(x, y)
+    mouse_range.startPos = {x, y}
 end
 
 function mouse_range:StopDrag(x, y, button, istouch, presses)
-    mouse_range.endPos = getTile(x, y)
-    --print(mouse_range.endPos.x, mouse_range.endPos.y)
-    if --[[ mouse_range.startPos == mouse_range.endPos or ]] true then
-        if button == 1 then
-            map:SetTile(mouse_range.endPos[1], mouse_range.endPos[2])
+    mouse_range.endPos = {x, y}
+    local startPos = getTile(mouse_range.startPos)
+    local endPos = getTile(mouse_range.endPos)
+
+    local differenceX = (endPos[1] - startPos[1])
+    local differenceY = (endPos[2] - startPos[2])
+
+    if (differenceX == 0 and differenceY == 0) then
+        if
+            (button == 1)
+            and (endPos[1] >= 1 and endPos[1] <= map.mapWidth)
+            and (endPos[2] >= 1 and endPos[2] <= map.mapHeight)
+        then
+            map:SetTile(endPos[1], endPos[2])
         end
     else
-        --[[ Calculate all selected tiles ]]
-        --[[ local x_range =  ]]
+        for i = 0, math.abs(differenceY) do
+            local numY = endPos[2] > startPos[2] and i or i * -1
+            for j = 0, math.abs(differenceX) do
+                local numX = endPos[1] > startPos[1] and j or j * -1
 
+                if
+                    (startPos[1] + numX >= 1 and startPos[1] + numX <= map.mapWidth)
+                    and (startPos[2] + numY >= 1 and startPos[2] + numY <= map.mapHeight)
+                then
+                    map:SetTile(startPos[1] + numX, startPos[2] + numY)
+                end
+            end
+        end
     end
 
     mouse_range.startPos = {}
@@ -31,13 +52,12 @@ end
 
 function mouse_range:Draw()
     local mouseX, mouseY = love.mouse.getPosition()
-    for k,v in pairs(mouse_range.startPos) do
-        print(v)
-    end
-    if not mouse_range.startPos == {} then
-        love.graphics.setColor(tile.color)
-        love.graphics.rectangle("fill", mouse_range.startPos[1] * map.tileWidth, mouse_range.startPos[2] * map.tileHeight, mouseX* 64, mouseY * 64)
-        love.graphics.setColor(1, 1, 1)
-        --love.graphics.rectangle("line", map.tileWidth * countCol, map.tileHeight * countRow, map.tileWidth, map.tileHeight)
+
+    if mouse_range.startPos[1] and mouse_range.startPos[2] then
+        love.graphics.setColor(0, 0.2, 0.8, 0.2)
+        love.graphics.rectangle("fill", mouse_range.startPos[1], mouse_range.startPos[2], mouseX -mouse_range.startPos[1], mouseY - mouse_range.startPos[2])
+
+        love.graphics.setColor(0, 0.3, 0.6, 0.8)
+        love.graphics.rectangle("line", mouse_range.startPos[1], mouse_range.startPos[2], mouseX -mouse_range.startPos[1], mouseY - mouse_range.startPos[2])
     end
 end
