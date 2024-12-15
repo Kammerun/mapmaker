@@ -70,6 +70,10 @@ function love.keypressed(k)
     if k == "5" then
         map:SelectedType("bridge")
     end
+
+    if k == "9" then
+        map:PrintCode()
+    end
 end
 
 function love.mousereleased(x, y, button, istouch, presses)

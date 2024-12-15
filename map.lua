@@ -1,9 +1,9 @@
 map = {}
 
-map.mapWidth = 60
-map.mapHeight = 60
-map.tileWidth = 16
-map.tileHeight = 16
+map.mapWidth = 10
+map.mapHeight = 12
+map.tileWidth = 64
+map.tileHeight = 64
 
 local curTypeTile = nil
 
@@ -79,7 +79,23 @@ function map:SetTile(x, y)
 end
 
 function map:PrintCode()
+    print("\n\n")
+    print("map = {")
 
+    for i = 1, map.mapHeight do
+        local currentRow = "{"
+        for j = 1, map.mapWidth do
+            if j == map.mapWidth then
+                currentRow = currentRow .. map_tiles[i][j].name .. "},"
+            elseif j == 1 then
+                currentRow = "\t" .. currentRow .. map_tiles[i][j].name .. ","
+            else
+                currentRow = currentRow .. map_tiles[i][j].name .. ","
+            end
+        end
+        print(currentRow)
+    end
+    print("}")
 end
 
 local typeTranslation = {
